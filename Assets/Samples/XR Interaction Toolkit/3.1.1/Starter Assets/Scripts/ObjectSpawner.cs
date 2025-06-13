@@ -190,8 +190,9 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
         /// Otherwise, it will spawn the prefab at the index.
         /// </remarks>
         /// <seealso cref="objectSpawned"/>
-        public bool TrySpawnObject(Vector3 spawnPoint, Vector3 spawnNormal)
+        public GameObject TrySpawnObject(Vector3 spawnPoint, Vector3 spawnNormal, out string prefabName)
         {
+            prefabName = "";
             if (m_OnlySpawnInView)
             {
                 var inViewMin = m_ViewportPeriphery;
@@ -200,7 +201,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
                 if (pointInViewportSpace.z < 0f || pointInViewportSpace.x > inViewMax || pointInViewportSpace.x < inViewMin ||
                     pointInViewportSpace.y > inViewMax || pointInViewportSpace.y < inViewMin)
                 {
-                    return false;
+                    return null;
                 }
             }
 
@@ -209,6 +210,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
             if (m_SpawnAsChildren)
                 newObject.transform.parent = transform;
 
+            prefabName = newObject.name;
             newObject.transform.position = spawnPoint;
             EnsureFacingCamera();
 
@@ -231,7 +233,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
             }
 
             objectSpawned?.Invoke(newObject);
-            return true;
+            return newObject;
         }
     }
 }

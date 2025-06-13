@@ -25,7 +25,6 @@ public class TrackedImageHandler : MonoBehaviour
     {
         foreach (ARTrackedImage image in changedArgs.added)
         {
-            GameObject object1 = null; //추가
             if (_placeMarkers.TryGetValue(image.trackableId, out var placeMarker) == false)
             {
                 _arTrackedImageManager.GetComponent<ARPlaneManager>().enabled = true;

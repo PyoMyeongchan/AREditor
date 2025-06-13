@@ -22,21 +22,32 @@ public class SearchPosition : MonoBehaviour
     private bool isPressed;
     private Vector2 cachedTouch;
     
-    public List<Vector3> markerPositions;
+    public List<MarkerData> markerDatas;
+    private Vector3 imagePosition;
+    private string imageName;
+    private bool isGameStart;
 
-    private void DebugObjectPosition(Vector3 position)
+    private void DebugObjectPosition(Vector3 position, string objectName)
     {
         _debugObjectPositionText.text = "ObjectDebugPosition" + position.ToString();
-        markerPositions.Add(position);
+        Vector3 gamePosition = position - imagePosition;
+        Debug.Log(position);
+        Debug.Log(imagePosition);
+        Debug.Log(gamePosition);
+        MarkerData objectMarker = new MarkerData(objectName, gamePosition);
+        markerDatas.Add(objectMarker);
     }
 
     public void SaveMarkerPosition()
     {
         SaveMarkerData markerData = new SaveMarkerData();
-        markerData.SaveVector3List(markerPositions);
+        markerData.SaveVector3List(markerDatas);
     }
 
-
+    private void Start()
+    {
+        isGameStart = false;
+    }
 
     private void OnEnable()
     {
@@ -57,6 +68,8 @@ public class SearchPosition : MonoBehaviour
 
         tapPosition.action.Disable();
         tapPress.action.Disable();
+        
+        ARInteractorSpawnTrigger.OnPositionDebug -= DebugObjectPosition;
     }
 
     private void OnTouchPosition(InputAction.CallbackContext context)
@@ -83,8 +96,17 @@ public class SearchPosition : MonoBehaviour
             Debug.Log("Raycast");
             if (hit.collider != null && hit.collider.CompareTag("ImagePosition"))
             {
+                if (isGameStart)
+                {
+                    return;
+                }
                 _imagePositionText.text = "ImagePosition"+ hit.collider.gameObject.transform.position.ToString();
-                markerPositions.Add(hit.collider.gameObject.transform.position);
+                imagePosition = hit.collider.gameObject.transform.position;
+                imageName = hit.collider.gameObject.name;
+                Vector3 imageGamePosition = new Vector3(0, 0, 0);
+                MarkerData imageMarker = new MarkerData(imageName, imageGamePosition);
+                markerDatas.Add(imageMarker);
+                isGameStart = true;
             }
             else if (hit.collider != null && hit.collider.CompareTag("ObjectPosition"))
             {

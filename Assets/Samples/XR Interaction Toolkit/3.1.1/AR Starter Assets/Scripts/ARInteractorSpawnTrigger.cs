@@ -150,7 +150,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
         }
 
         
-        public static Action<Vector3> OnPositionDebug; 
+        public static Action<Vector3, string> OnPositionDebug; 
         /// <summary>
         /// See <see cref="MonoBehaviour"/>.
         /// </summary>
@@ -183,8 +183,11 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
                         return;
                     }
 
-                    m_ObjectSpawner.TrySpawnObject(arRaycastHit.pose.position, arPlane.normal);
-                    OnPositionDebug?.Invoke(arRaycastHit.pose.position);
+                    
+                    string spawnedObjectName;
+                    GameObject spawnedObject = m_ObjectSpawner.TrySpawnObject(arRaycastHit.pose.position, arPlane.normal, out spawnedObjectName);
+
+                    OnPositionDebug?.Invoke(arRaycastHit.pose.position, spawnedObjectName);
                 }
 
                 return;
