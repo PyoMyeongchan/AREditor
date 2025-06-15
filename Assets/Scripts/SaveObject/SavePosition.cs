@@ -22,11 +22,26 @@ public class SavePosition : MonoBehaviour
         RenameEvents.OnMarkerRenamed -= HandleRename;
     }
 
-    private void UpdateMarkerData(Vector3 position, string objectName, string id)
+    private void UpdateMarkerData(Vector3 position, Quaternion rotation, string objectName, string id)
     {
-        Vector3 gamePosition = position - _searchPosition.GetImagePosition();
-        MarkerData objectMarker = new MarkerData(id, objectName, gamePosition);
-        markerDatas.Add(objectMarker);
+        Transform trackedImageTransform = _searchPosition.GetTrackedImageTransform();
+        if (trackedImageTransform == null) return;
+
+        Vector3 localPos = trackedImageTransform.InverseTransformPoint(position);
+        Quaternion localRot = Quaternion.Inverse(trackedImageTransform.rotation) * rotation;
+
+        var existing = markerDatas.FirstOrDefault(m => m.id == id);
+        if (existing != null)
+        {
+            existing.position = localPos;
+            existing.rotation = localRot;
+            existing.objectName = objectName;
+        }
+        else
+        {
+            MarkerData objectMarker = new MarkerData(id, objectName, localPos, localRot);
+            markerDatas.Add(objectMarker);
+        }
     }
 
     public void SaveMarkerPosition()
@@ -45,6 +60,7 @@ public class SavePosition : MonoBehaviour
             if (existing != null)
             {
                 existing.objectName = marker.objectName;
+                existing.rotation = marker.rotation;
                 existing.position = marker.position;
             }
             else

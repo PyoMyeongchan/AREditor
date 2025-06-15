@@ -3624,6 +3624,7 @@ MonoBehaviour:
   _placePrefab: {fileID: 1934569588295450, guid: a1b40389fb4465f46952ea38b11fc4d8,
     type: 3}
   _markerLoader: {fileID: 1802878228}
+  _searchPosition: {fileID: 1047073162}
 --- !u!4 &1757742146
 Transform:
   m_ObjectHideFlags: 0

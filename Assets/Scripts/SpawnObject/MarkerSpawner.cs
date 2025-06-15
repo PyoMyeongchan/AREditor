@@ -148,6 +148,7 @@ public class MarkerSpawner : MonoBehaviour
 
         prefabName = newObject.name;
         newObject.transform.position = spawnPoint;
+        newObject.transform.rotation = Quaternion.LookRotation(spawnNormal);
         objectId = Guid.NewGuid().ToString();
         
         var idHolder = newObject.GetComponent<MarkerIDHolder>();

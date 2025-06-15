@@ -7,6 +7,8 @@ public class MarkerLoader : MonoBehaviour
     [SerializeField] private GameObject markerPrefab;
     private SaveMarkerData _saveMarkerData;
     [SerializeField] private SavePosition savePosition;
+    
+    private bool _isSpawned = false;
 
     private void Awake()
     {
@@ -15,8 +17,15 @@ public class MarkerLoader : MonoBehaviour
     
     private List<GameObject> spawnedMarkers = new List<GameObject>();
 
-    public void LoadAndSpawnMarkers()
+    public void LoadAndSpawnMarkers(Transform imageTransform)
     {
+        if (_isSpawned)
+        {
+            return;
+        }
+        
+        Vector3 imagePosition = imageTransform.position;
+        
         foreach (var obj in spawnedMarkers)
         {
             Destroy(obj);
@@ -24,10 +33,13 @@ public class MarkerLoader : MonoBehaviour
         spawnedMarkers.Clear();
     
         List<MarkerData> markerDatas = _saveMarkerData.LoadMarkerList();
-
+        
         foreach (var data in markerDatas)
         {
-            GameObject marker = Instantiate(markerPrefab, data.position, Quaternion.identity);
+            Vector3 worldPos = imageTransform.TransformPoint(data.position);
+            Quaternion worldRot = imageTransform.rotation * data.rotation;
+            
+            GameObject marker = Instantiate(markerPrefab, worldPos, worldRot, imageTransform);
             marker.name = data.objectName;
 
             var idHolder = marker.GetComponent<MarkerIDHolder>();
@@ -40,5 +52,7 @@ public class MarkerLoader : MonoBehaviour
             
             spawnedMarkers.Add(marker);
         }
+        
+        _isSpawned = true;
     }
 } 

@@ -22,8 +22,9 @@ public class SearchPosition : MonoBehaviour
     [SerializeField] private RenameObjectUI _renameObjectUI;
     [SerializeField] private MarkerEraser _markerEraser;
     
-    private Vector3 imagePosition;
-    public Vector3 GetImagePosition() => imagePosition;
+    
+    private Transform _trackedImageTransform;
+    public Transform GetTrackedImageTransform() => _trackedImageTransform;
 
     private string imageName;
     private bool isGameStart;
@@ -46,7 +47,16 @@ public class SearchPosition : MonoBehaviour
         TouchInputManager.OnTouchPerformed -= CheckPosition;
     }
 
+    public void SetTrackedImageTransform(Transform trackedImageTransform)
+    {
+        if (isGameStart) return;
 
+        _trackedImageTransform = trackedImageTransform;
+        imageName = trackedImageTransform.name;
+        isGameStart = true;
+
+        _imagePositionText.text = "ImagePosition " + _trackedImageTransform.position.ToString();
+    }
 
     private void CheckPosition(Vector2 screenPosition)
     {
@@ -57,19 +67,7 @@ public class SearchPosition : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * 10f, Color.red, 5f);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Debug.Log("Raycast");
-            if (hit.collider != null && hit.collider.CompareTag("ImagePosition"))
-            {
-                if (isGameStart)
-                {
-                    return;
-                }
-                _imagePositionText.text = "ImagePosition"+ hit.collider.gameObject.transform.position.ToString();
-                imagePosition = hit.collider.gameObject.transform.position;
-                imageName = hit.collider.gameObject.name;
-                isGameStart = true;
-            }
-            else if (hit.collider != null && hit.collider.CompareTag("ObjectPosition"))
+            if (hit.collider != null && hit.collider.CompareTag("ObjectPosition"))
             {
                 _objectPositionText.text = "MarkerPosition" + hit.collider.gameObject.transform.position.ToString();
                 _selectedObject = hit.collider.gameObject;
@@ -87,6 +85,5 @@ public class SearchPosition : MonoBehaviour
             }
         }
     }
-  
 
 }

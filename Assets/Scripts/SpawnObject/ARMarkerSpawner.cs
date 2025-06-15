@@ -11,7 +11,7 @@ using UnityEngine;
 public class ARMarkerSpawner : MonoBehaviour
 {
     [SerializeField] private Image _objectImage;
-    public static Action<Vector3, string, string> OnPositionDebug; 
+    public static Action<Vector3, Quaternion, string, string> OnPositionDebug; 
     public enum SpawnTriggerType
    {
        SelectAttempt,
@@ -135,7 +135,7 @@ public class ARMarkerSpawner : MonoBehaviour
                 
                 GameObject spawnedObject = _markerSpawner.TrySpawnObject(arRaycastHit.pose.position, arPlane.normal, out spawnedObjectName, out objectID);
                 
-                OnPositionDebug?.Invoke(arRaycastHit.pose.position, spawnedObjectName, objectID);
+                OnPositionDebug?.Invoke(arRaycastHit.pose.position,spawnedObject.transform.rotation, spawnedObjectName, objectID);
             }
 
             return;
