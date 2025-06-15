@@ -47,7 +47,7 @@ public class TrackedImageHandler : MonoBehaviour
 
                 var newMarker = Instantiate(_placePrefab, image.transform);
                 _placeMarkers.Add(image.trackableId, newMarker);
-                newMarker.transform.localPosition = Vector3.zero;
+                newMarker.transform.localPosition = new Vector3(0, 0, -0.01f);
                 newMarker.transform.localRotation = Quaternion.identity;
 
                 _markerLoader.LoadAndSpawnMarkers(image.transform);
