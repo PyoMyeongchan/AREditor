@@ -61,7 +61,8 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
             var infinitePlane = new Plane(surfaceNormal, surfacePosition);
             var contactPoint = infinitePlane.ClosestPointOnPlane(transform.position);
             string spawnedObjectName;
-            m_ObjectSpawner.TrySpawnObject(contactPoint, surfaceNormal,out spawnedObjectName);
+            string id;
+            m_ObjectSpawner.TrySpawnObject(contactPoint, surfaceNormal,out spawnedObjectName, out id);
         }
 
         /// <summary>
