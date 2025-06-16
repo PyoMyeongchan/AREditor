@@ -24,8 +24,6 @@ public class MarkerLoader : MonoBehaviour
             return;
         }
         
-        Vector3 imagePosition = imageTransform.position;
-        
         foreach (var obj in spawnedMarkers)
         {
             Destroy(obj);

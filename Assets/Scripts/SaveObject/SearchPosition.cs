@@ -47,7 +47,7 @@ public class SearchPosition : MonoBehaviour
         TouchInputManager.OnTouchPerformed -= CheckPosition;
     }
 
-    public void SetTrackedImageTransform(Transform trackedImageTransform)
+    public void SetTrackedImagePosition(Transform trackedImageTransform)
     {
         if (isGameStart) return;
 

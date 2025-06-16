@@ -25,8 +25,11 @@ public class SavePosition : MonoBehaviour
     private void UpdateMarkerData(Vector3 position, Quaternion rotation, string objectName, string id)
     {
         Transform trackedImageTransform = _searchPosition.GetTrackedImageTransform();
-        if (trackedImageTransform == null) return;
-
+        if (trackedImageTransform == null)
+        {
+            return;
+        }
+        
         Vector3 localPos = trackedImageTransform.InverseTransformPoint(position);
         Quaternion localRot = Quaternion.Inverse(trackedImageTransform.rotation) * rotation;
 
@@ -71,7 +74,6 @@ public class SavePosition : MonoBehaviour
 
         markerDataHandler.SaveMarkerList(loadMarkerList);
         Debug.Log(loadMarkerList.Count);
-        Debug.Log("마커 위치 저장 완료 (Guid 기반)");
     }
     
     public void RemoveMarkerData(string markerId)
